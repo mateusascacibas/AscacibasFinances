@@ -1,10 +1,12 @@
 package com.finances.AscacibasFinances.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finances.AscacibasFinances.comuns.ResponseMessage;
 import com.finances.AscacibasFinances.dto.RevenueRequestDTO;
 import com.finances.AscacibasFinances.dto.RevenueResponseDTO;
 import com.finances.AscacibasFinances.mapper.RevenueMapper;
@@ -22,15 +24,24 @@ public class RevenueService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public RevenueResponseDTO createRevenue(RevenueRequestDTO request) {
+	public ResponseMessage createRevenue(RevenueRequestDTO request) {
 		User user = userRepository.findById(request.userId()).orElseThrow(() -> new RuntimeException("User not found"));
 		try {			
 			Revenue revenue = RevenueMapper.toEntity(request, user);
 			revenueRepository.save(revenue);
-			return RevenueMapper.toDTO(revenue);
+			return new ResponseMessage(true, "Revenue created with success.");
 		} catch(Exception e) {
-			System.out.println("Error creating revenue");
-			throw e;
+			return new ResponseMessage(false, "Error creating revenue -> " + e.getMessage());
+		}
+	}
+	
+	public ResponseMessage deleteRevenue(Long id) {
+		try {
+			Revenue revenue = revenueRepository.findById(id).orElseThrow(() -> new RuntimeException("Revenue not found"));
+			revenueRepository.delete(revenue);
+			return new ResponseMessage(true, "Revenue deleted with success.");
+		} catch(Exception e) {
+			return new ResponseMessage(false, "Error deleting revenue -> " + e.getMessage());
 		}
 	}
 	
