@@ -49,6 +49,17 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	public ResponseMessage changeUserPassword(Long id, UserRequestDTO request) {
+		try {			
+			User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+			user.setPassword(passwordEncoder.encode(request.password()));
+			userRepository.save(user);
+			return new ResponseMessage(true, "Password updated with success.");
+		} catch (Exception e) {
+			return new ResponseMessage(false, "Error changing password -> " + e.getMessage());
+		}
+	}
+	
 	public List<UserResponseDTO> listAllUsers(){
 		try {
 			List<User> list = new ArrayList<User>();

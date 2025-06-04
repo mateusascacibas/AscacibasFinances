@@ -45,6 +45,33 @@ public class RevenueService {
 		}
 	}
 	
+	public ResponseMessage editRevenue(Long id, RevenueRequestDTO request) {
+		try {
+			Revenue revenue = revenueRepository.findById(id).orElseThrow(() -> new RuntimeException("Revenue not found"));
+			setEditValues(request, revenue);
+			revenueRepository.save(revenue);
+			return new ResponseMessage(true, "Revenue edited with success.");
+		} catch(Exception e) {
+			return new ResponseMessage(false, "Error editing revenue -> " + e.getMessage());
+		}
+	}
+
+	private void setEditValues(RevenueRequestDTO request, Revenue revenue) {
+		if(request.amount() != null && request.amount() != revenue.getAmount()) {
+			revenue.setAmount(request.amount());
+		}
+		if(request.description() != null && request.description() != revenue.getDescription()) {
+			revenue.setDescription(request.description());
+		}
+		if(request.userId() != null && request.userId() != revenue.getUser().getId()) {
+			User user = userRepository.findById(request.userId()).orElseThrow(() -> new RuntimeException("User not found"));
+			revenue.setUser(user);
+		}
+		if(request.type() != null && request.type() != revenue.getType()) {
+			revenue.setType(request.type());
+		}
+	}
+	
 	public List<RevenueResponseDTO> listAllRevenues(){
 		List<Revenue> list = revenueRepository.findAll();
 		List<RevenueResponseDTO> response = list.stream().map(RevenueMapper::toDTO).toList();

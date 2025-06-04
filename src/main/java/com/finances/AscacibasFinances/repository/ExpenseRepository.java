@@ -6,11 +6,15 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.finances.AscacibasFinances.enumerator.CategoryEnum;
+import com.finances.AscacibasFinances.enumerator.TypeEnum;
 import com.finances.AscacibasFinances.model.Expense;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	Optional<List<Expense>> findByUserId(Long userId);
+	
+	Optional<List<Expense>> findByCategory(CategoryEnum category);
 
 }

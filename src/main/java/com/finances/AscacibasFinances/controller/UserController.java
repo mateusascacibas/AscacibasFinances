@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,15 @@ public class UserController {
 	public ResponseEntity<ResponseMessage> createUser(@RequestBody UserRequestDTO user){
 		ResponseMessage response = userService.createUser(user);
 		if(response.isSuccess()) {			
+			return ResponseEntity.ok(response);
+		}
+		return ResponseEntity.badRequest().body(response);
+	}
+	
+	@PutMapping("/changePassword/{id}")
+	public ResponseEntity<ResponseMessage> changeUserPassword(@PathVariable Long id, @RequestBody UserRequestDTO user){
+		ResponseMessage response = userService.changeUserPassword(id, user);
+		if(response.isSuccess()) {
 			return ResponseEntity.ok(response);
 		}
 		return ResponseEntity.badRequest().body(response);
