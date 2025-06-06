@@ -17,6 +17,6 @@ public class FinanceGoalMapper {
 	}
 	
 	public static FinanceGoalResponseDTO toDTO(FinanceGoal financeGoal) {
-		return new FinanceGoalResponseDTO(financeGoal.getId(), financeGoal.getType(), financeGoal.getProgress(), financeGoal.getTargetAmount());
+		return new FinanceGoalResponseDTO(financeGoal.getId(), financeGoal.getType(), financeGoal.getTargetAmount(), financeGoal.getProgress());
 	}
 }

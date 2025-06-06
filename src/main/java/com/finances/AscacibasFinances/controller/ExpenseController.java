@@ -62,7 +62,7 @@ public class ExpenseController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/listByType/{type}")
+	@GetMapping("/listByCategory/{category}")
 	public ResponseEntity<List<ExpenseResponseDTO>> listExpensesByCategory(@PathVariable CategoryEnum category) {
 		List<ExpenseResponseDTO> response = expenseService.listExpensesByCategory(category);
 		return ResponseEntity.ok(response);
