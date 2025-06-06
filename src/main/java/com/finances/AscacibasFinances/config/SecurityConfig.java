@@ -25,19 +25,19 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder; // 👈 ADICIONA ISSO
+    private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(JwtService jwtService, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder; // 👈 RECEBE AQUI
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder); // 👈 USA AQUI
+        provider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(provider);
     }
 
@@ -48,8 +48,15 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .cors(Customizer.withDefaults()) // 👈 AQUI
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                            "/swagger-ui/**", 
+                            "/v3/api-docs/**", 
+                            "/swagger-resources/**", 
+                            "/configuration/**",
+                            "/webjars/**"
+                        ).permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .anyRequest().authenticated()
                 )
